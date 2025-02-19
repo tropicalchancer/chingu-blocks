@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neighborhood Analytics Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 2rem;
+            border-radius: 12px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -13,7 +23,7 @@
                 <span class="house-icon">🏠</span>
                 <h1>Aleph Neighborhood Analytics</h1>
             </div>
-            <p class="subtitle">Real-time analytics and insights for the neighborhood</p>
+            <p class="subtitle">A movement transforming Argentina into the world's first crypto nation</p>
         </header>
 
         <div class="dashboard-grid">
@@ -75,9 +85,33 @@
                         <h3>Proofs Generated</h3>
                         <p class="number">8.9K</p>
                     </div>
+                    <div class="stat">
+                        <h3>DeSci Experiments</h3>
+                        <p class="number">24</p>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="map"></div>
     </div>
+
+    <script src="config.js"></script>
+    <script>
+        mapboxgl.accessToken = config.mapboxToken;
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/satellite-v9',
+            center: [-58.4320, -34.5830],
+            zoom: 14.5
+        });
+
+        // Add navigation controls
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // Optional: Add a marker for Palermo Hollywood
+        new mapboxgl.Marker()
+            .setLngLat([-58.4320, -34.5830])
+            .addTo(map);
+    </script>
 </body>
 </html> 
