@@ -26,73 +26,75 @@
             <p class="subtitle">A movement transforming Argentina into the world's first crypto nation</p>
         </header>
 
-        <div class="dashboard-grid">
-            <!-- People Section -->
-            <div class="card">
-                <h2>👥 People</h2>
-                <div class="stat-group">
-                    <div class="stat">
-                        <h3>Local Residents</h3>
-                        <p class="number">320</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Multi-local Residents</h3>
-                        <p class="number">130</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Visitors</h3>
-                        <p class="number">1.2K</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Total Staked Days</h3>
-                        <p class="number">42.7K</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Economic Activity Section -->
-            <div class="card">
-                <h2>💰 Economic Activity</h2>
-                <div class="stat-group">
-                    <div class="stat">
-                        <h3>Total Transactions</h3>
-                        <p class="number">15.4K</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Total Transacted</h3>
-                        <p class="number">$2.8M</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Connected Merchants</h3>
-                        <p class="number">85</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Startups Formed</h3>
-                        <p class="number">12</p>
+        <div class="main-layout">
+            <div id="map"></div>
+            <div class="dashboard-grid">
+                <!-- People Section -->
+                <div class="card">
+                    <h2>👥 People</h2>
+                    <div class="stat-group">
+                        <div class="stat">
+                            <h3>Local Residents</h3>
+                            <p class="number">320</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Multi-local Residents</h3>
+                            <p class="number">130</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Visitors</h3>
+                            <p class="number">1.2K</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Total Staked Days</h3>
+                            <p class="number">42.7K</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Sandbox Activity Section -->
-            <div class="card">
-                <h2>🔒 Sandbox Activity</h2>
-                <div class="stat-group">
-                    <div class="stat">
-                        <h3>Connected Houses</h3>
-                        <p class="number">36</p>
+                <!-- Economic Activity Section -->
+                <div class="card">
+                    <h2>💰 Economic Activity</h2>
+                    <div class="stat-group">
+                        <div class="stat">
+                            <h3>Total Transactions</h3>
+                            <p class="number">15.4K</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Total Transacted</h3>
+                            <p class="number">$2.8M</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Connected Merchants</h3>
+                            <p class="number">85</p>
+                        </div>
+                        <div class="stat">
+                            <h3>Startups Formed</h3>
+                            <p class="number">12</p>
+                        </div>
                     </div>
-                    <div class="stat">
-                        <h3>Proofs Generated</h3>
-                        <p class="number">8.9K</p>
-                    </div>
-                    <div class="stat">
-                        <h3>DeSci Experiments</h3>
-                        <p class="number">24</p>
+                </div>
+
+                <!-- Sandbox Activity Section -->
+                <div class="card">
+                    <h2>🔒 Sandbox Activity</h2>
+                    <div class="stat-group">
+                        <div class="stat">
+                            <h3>Connected Houses</h3>
+                            <p class="number">36</p>
+                        </div>
+                        <div class="stat">
+                            <h3>ZK Proofs Generated</h3>
+                            <p class="number">8.9K</p>
+                        </div>
+                        <div class="stat">
+                            <h3>DeSci Experiments</h3>
+                            <p class="number">24</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="map"></div>
     </div>
 
     <script src="config.js"></script>
@@ -100,18 +102,57 @@
         mapboxgl.accessToken = config.mapboxToken;
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/satellite-v9',
+            style: 'mapbox://styles/mapbox/light-v11',
             center: [-58.4320, -34.5830],
             zoom: 14.5
         });
 
+        // Generate spread out locations for merchants and houses
+        function generateLocations(count, centerLng, centerLat, spread) {
+            const locations = [];
+            for (let i = 0; i < count; i++) {
+                // Create a random offset within the spread range
+                const lngOffset = (Math.random() - 0.5) * spread;
+                const latOffset = (Math.random() - 0.5) * spread;
+                
+                locations.push({
+                    lng: centerLng + lngOffset,
+                    lat: centerLat + latOffset
+                });
+            }
+            return locations;
+        }
+
+        // Generate locations for all merchants and houses
+        const merchants = generateLocations(85, -58.4320, -34.5830, 0.025);
+        const houses = generateLocations(36, -58.4320, -34.5830, 0.025);
+
+        // Add merchant markers
+        merchants.forEach(location => {
+            const el = document.createElement('div');
+            el.innerHTML = '🏬';
+            el.style.fontSize = '18px';
+            el.style.cursor = 'pointer';
+
+            new mapboxgl.Marker(el)
+                .setLngLat([location.lng, location.lat])
+                .addTo(map);
+        });
+
+        // Add house markers
+        houses.forEach(location => {
+            const el = document.createElement('div');
+            el.innerHTML = '🏠';
+            el.style.fontSize = '18px';
+            el.style.cursor = 'pointer';
+
+            new mapboxgl.Marker(el)
+                .setLngLat([location.lng, location.lat])
+                .addTo(map);
+        });
+
         // Add navigation controls
         map.addControl(new mapboxgl.NavigationControl());
-
-        // Optional: Add a marker for Palermo Hollywood
-        new mapboxgl.Marker()
-            .setLngLat([-58.4320, -34.5830])
-            .addTo(map);
     </script>
 </body>
 </html> 
