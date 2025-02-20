@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neighborhood Analytics Dashboard</title>
+    <title>Zanzalu Neighborhood Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
@@ -37,45 +37,21 @@
         .legend-icon {
             font-size: 16px;
         }
-
-        .neighborhood-nav {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .neighborhood-link {
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            color: #666;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .neighborhood-link:hover {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        .neighborhood-link.active {
-            background: #FF69B4;
-            color: white;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="logo">
-                <span class="house-icon">🏠</span>
-                <h1>Aleph Neighborhood</h1>
+                <span class="house-icon">🌴</span>
+                <h1>Zanzalu Neighborhood</h1>
             </div>
-            <p class="subtitle">A movement transforming Argentina into the world's first crypto nation.</p>
+            <p class="subtitle">Building Africa's first crypto-enabled smart city in Fumba Town, Zanzibar</p>
         </header>
-        
+
         <div class="neighborhood-nav">
-            <a href="index.html" class="neighborhood-link active">🏠 Aleph Neighborhood</a>
-            <a href="zanzalu.html" class="neighborhood-link">🌴 Zanzalu Neighborhood</a>
+            <a href="index.html" class="neighborhood-link">🏠 Aleph Neighborhood</a>
+            <a href="zanzalu.html" class="neighborhood-link active">🌴 Zanzalu Neighborhood</a>
         </div>
 
         <div class="main-layout">
@@ -83,7 +59,7 @@
                 <div class="map-legend">
                     <div class="legend-item">
                         <span class="legend-icon">🏛️</span>
-                        <span>Aleph Hub</span>
+                        <span>Zanzalu Hub</span>
                     </div>
                     <div class="legend-item">
                         <span class="legend-icon">🏰</span>
@@ -122,19 +98,19 @@
                     <div class="stat-group">
                         <div class="stat">
                             <h3>Local Residents</h3>
-                            <p class="number">320</p>
+                            <p class="number">180</p>
                         </div>
                         <div class="stat">
                             <h3>Multi-local Residents</h3>
-                            <p class="number">130</p>
+                            <p class="number">45</p>
                         </div>
                         <div class="stat">
                             <h3>Visitors</h3>
-                            <p class="number">1.2K</p>
+                            <p class="number">820</p>
                         </div>
                         <div class="stat">
                             <h3>Total Staked Days</h3>
-                            <p class="number">42.7K</p>
+                            <p class="number">28.5K</p>
                         </div>
                     </div>
                 </div>
@@ -145,19 +121,19 @@
                     <div class="stat-group">
                         <div class="stat">
                             <h3>Total Transactions</h3>
-                            <p class="number">15.4K</p>
+                            <p class="number">8.2K</p>
                         </div>
                         <div class="stat">
                             <h3>Total Transacted</h3>
-                            <p class="number">$2.8M</p>
+                            <p class="number">$1.5M</p>
                         </div>
                         <div class="stat">
                             <h3>Connected Merchants</h3>
-                            <p class="number">85</p>
+                            <p class="number">42</p>
                         </div>
                         <div class="stat">
                             <h3>Startups Formed</h3>
-                            <p class="number">12</p>
+                            <p class="number">8</p>
                         </div>
                     </div>
                 </div>
@@ -168,15 +144,15 @@
                     <div class="stat-group">
                         <div class="stat">
                             <h3>Connected Houses</h3>
-                            <p class="number">36</p>
+                            <p class="number">24</p>
                         </div>
                         <div class="stat">
                             <h3>ZK Proofs Generated</h3>
-                            <p class="number">8.9K</p>
+                            <p class="number">5.4K</p>
                         </div>
                         <div class="stat">
                             <h3>DeSci Experiments</h3>
-                            <p class="number">24</p>
+                            <p class="number">16</p>
                         </div>
                     </div>
                 </div>
@@ -190,27 +166,25 @@
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/light-v11',
-            center: [-58.4320, -34.5830],
-            zoom: 14.5
+            center: [39.251350820534505, -6.275371542374451], // Exact Fumba Town coordinates
+            zoom: 15 // Adjusted zoom to show the development
         });
 
         // Add a polygon layer for the neighborhood boundary
         map.on('load', () => {
-            // Generate circle coordinates
             function generateCirclePoints(centerLng, centerLat, radiusKm, points = 64) {
                 const coords = [];
-                const km = radiusKm / 111.32; // Convert km to degrees (approximate)
+                const km = radiusKm / 111.32;
                 
                 for (let i = 0; i <= points; i++) {
                     const angle = (i * 360) / points;
                     const rad = (angle * Math.PI) / 180;
                     coords.push([
                         centerLng + (km * Math.cos(rad)),
-                        centerLat + (km * Math.sin(rad) * 0.7) // Adjust for latitude distortion
+                        centerLat + (km * Math.sin(rad) * 0.7)
                     ]);
                 }
                 
-                // Close the circle
                 coords.push(coords[0]);
                 return coords;
             }
@@ -222,7 +196,7 @@
                     'geometry': {
                         'type': 'Polygon',
                         'coordinates': [
-                            generateCirclePoints(-58.4320, -34.5830, 1.2) // Increased radius to 1.2km
+                            generateCirclePoints(39.251350820534505, -6.275371542374451, 0.3) // Adjusted radius
                         ]
                     }
                 }
@@ -235,7 +209,7 @@
                 'layout': {},
                 'paint': {
                     'fill-color': '#FF69B4',
-                    'fill-opacity': 0.08 // Slightly reduced opacity
+                    'fill-opacity': 0.08
                 }
             });
 
@@ -247,46 +221,49 @@
                 'paint': {
                     'line-color': '#FF69B4',
                     'line-width': 2,
-                    'line-opacity': 0.25 // Slightly reduced opacity
+                    'line-opacity': 0.25
                 }
             });
         });
 
-        // Generate spread out locations for merchants and houses
-        function generateLocations(count, centerLng, centerLat, spread) {
-            const locations = [];
-            for (let i = 0; i < count; i++) {
-                // Create a random offset within the spread range
-                const lngOffset = (Math.random() - 0.5) * spread;
-                const latOffset = (Math.random() - 0.5) * spread;
-                
-                locations.push({
-                    lng: centerLng + lngOffset,
-                    lat: centerLat + latOffset
-                });
-            }
-            return locations;
-        }
+        // Hardcoded house locations spread along the roads
+        const houses = [
+            // Along main road
+            { lng: 39.2513, lat: -6.2745 },
+            { lng: 39.2514, lat: -6.2748 },
+            { lng: 39.2515, lat: -6.2751 },
+            { lng: 39.2516, lat: -6.2754 },
+            { lng: 39.2517, lat: -6.2757 },
+            // Along eastern road
+            { lng: 39.2520, lat: -6.2747 },
+            { lng: 39.2519, lat: -6.2750 },
+            { lng: 39.2518, lat: -6.2753 },
+            { lng: 39.2521, lat: -6.2756 },
+            { lng: 39.2522, lat: -6.2759 },
+            // Along western road
+            { lng: 39.2508, lat: -6.2748 },
+            { lng: 39.2509, lat: -6.2751 },
+            { lng: 39.2510, lat: -6.2754 },
+            { lng: 39.2511, lat: -6.2757 },
+            { lng: 39.2512, lat: -6.2760 }
+        ];
 
-        // Generate locations for all merchants and houses
-        const merchants = generateLocations(85, -58.4320, -34.5830, 0.025);
-        const houses = generateLocations(36, -58.4320, -34.5830, 0.025);
+        // Hardcoded merchant locations
+        const merchants = [
+            // Cafe
+            { type: '☕', lng: 39.2515, lat: -6.2752 },
+            // Restaurants
+            { type: '🍽️', lng: 39.2518, lat: -6.2749 },
+            { type: '🍽️', lng: 39.2513, lat: -6.2755 },
+            { type: '🍽️', lng: 39.2516, lat: -6.2758 },
+            // Shop
+            { type: '🛍️', lng: 39.2514, lat: -6.2753 }
+        ];
 
-        // Add merchant markers
-        const merchantEmojis = ['🛍️', '☕', '🍽️', '🍳', '🍷'];  // Shopping, cafe, restaurant, diner, wine/bar
-
-        merchants.forEach(location => {
-            const el = document.createElement('div');
-            // Randomly select an emoji from the array
-            const randomEmoji = merchantEmojis[Math.floor(Math.random() * merchantEmojis.length)];
-            el.innerHTML = randomEmoji;
-            el.style.fontSize = '18px';
-            el.style.cursor = 'pointer';
-
-            new mapboxgl.Marker(el)
-                .setLngLat([location.lng, location.lat])
-                .addTo(map);
-        });
+        // Single Odisea house location
+        const odiseaHouses = [
+            { lng: 39.2516, lat: -6.2746 } // Prominent location near the center
+        ];
 
         // Add house markers
         houses.forEach(location => {
@@ -300,40 +277,41 @@
                 .addTo(map);
         });
 
-        // Add Odisea house locations
-        const odiseaHouses = [
-            { lng: -58.4280, lat: -34.5790 }, // Northeast location
-            { lng: -58.4360, lat: -34.5850 }, // Southwest location
-            { lng: -58.4290, lat: -34.5870 }  // Southeast location
-        ];
+        // Add merchant markers
+        merchants.forEach(location => {
+            const el = document.createElement('div');
+            el.innerHTML = location.type;
+            el.style.fontSize = '18px';
+            el.style.cursor = 'pointer';
+
+            new mapboxgl.Marker(el)
+                .setLngLat([location.lng, location.lat])
+                .addTo(map);
+        });
 
         // Add Odisea house markers
         odiseaHouses.forEach(location => {
             const el = document.createElement('div');
             el.innerHTML = '🏰';
-            el.style.fontSize = '28px'; // Larger than merchants (18px) but smaller than hub (40px)
+            el.style.fontSize = '28px';
             el.style.cursor = 'pointer';
-            el.style.zIndex = '500'; // Above regular markers but below hub
+            el.style.zIndex = '500';
 
-            // Create popup for Odisea houses
             const odiseaPopup = new mapboxgl.Popup({
                 closeButton: false,
                 closeOnClick: false
             })
             .setHTML('<h3 style="margin: 0; padding: 5px; font-weight: 500;">Odisea House</h3>');
 
-            // Create the marker
             const marker = new mapboxgl.Marker(el)
                 .setLngLat([location.lng, location.lat])
                 .addTo(map);
 
-            // Show popup on hover
             el.addEventListener('mouseenter', () => {
                 odiseaPopup.setLngLat([location.lng, location.lat])
                     .addTo(map);
             });
 
-            // Hide popup when mouse leaves
             el.addEventListener('mouseleave', () => {
                 odiseaPopup.remove();
             });
@@ -342,32 +320,28 @@
         // Add navigation controls
         map.addControl(new mapboxgl.NavigationControl());
 
-        // Add ALEPH HUB marker in the center
+        // Add Zanzalu Hub marker
         const hubEl = document.createElement('div');
         hubEl.innerHTML = '🏛️';
         hubEl.style.fontSize = '40px';
         hubEl.style.cursor = 'pointer';
         hubEl.style.zIndex = '1000';
 
-        // Create a popup but don't add it to map yet
         const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false
         })
-        .setHTML('<h3 style="margin: 0; padding: 5px; font-weight: 500;">Aleph Hub</h3>');
+        .setHTML('<h3 style="margin: 0; padding: 5px; font-weight: 500;">Zanzalu Hub</h3>');
 
-        // Create the marker
         const hubMarker = new mapboxgl.Marker(hubEl)
-            .setLngLat([-58.4320, -34.5830])
+            .setLngLat([39.251350820534505, -6.275371542374451])
             .addTo(map);
 
-        // Show popup on hover
         hubEl.addEventListener('mouseenter', () => {
-            popup.setLngLat([-58.4320, -34.5830])
+            popup.setLngLat([39.251350820534505, -6.275371542374451])
                 .addTo(map);
         });
 
-        // Hide popup when mouse leaves
         hubEl.addEventListener('mouseleave', () => {
             popup.remove();
         });
