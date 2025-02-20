@@ -107,6 +107,64 @@
             zoom: 14.5
         });
 
+        // Add a polygon layer for the neighborhood boundary
+        map.on('load', () => {
+            // Generate circle coordinates
+            function generateCirclePoints(centerLng, centerLat, radiusKm, points = 64) {
+                const coords = [];
+                const km = radiusKm / 111.32; // Convert km to degrees (approximate)
+                
+                for (let i = 0; i <= points; i++) {
+                    const angle = (i * 360) / points;
+                    const rad = (angle * Math.PI) / 180;
+                    coords.push([
+                        centerLng + (km * Math.cos(rad)),
+                        centerLat + (km * Math.sin(rad) * 0.7) // Adjust for latitude distortion
+                    ]);
+                }
+                
+                // Close the circle
+                coords.push(coords[0]);
+                return coords;
+            }
+
+            map.addSource('neighborhood', {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'geometry': {
+                        'type': 'Polygon',
+                        'coordinates': [
+                            generateCirclePoints(-58.4320, -34.5830, 1.2) // Increased radius to 1.2km
+                        ]
+                    }
+                }
+            });
+
+            map.addLayer({
+                'id': 'neighborhood-boundary',
+                'type': 'fill',
+                'source': 'neighborhood',
+                'layout': {},
+                'paint': {
+                    'fill-color': '#FF69B4',
+                    'fill-opacity': 0.08 // Slightly reduced opacity
+                }
+            });
+
+            map.addLayer({
+                'id': 'neighborhood-outline',
+                'type': 'line',
+                'source': 'neighborhood',
+                'layout': {},
+                'paint': {
+                    'line-color': '#FF69B4',
+                    'line-width': 2,
+                    'line-opacity': 0.25 // Slightly reduced opacity
+                }
+            });
+        });
+
         // Generate spread out locations for merchants and houses
         function generateLocations(count, centerLng, centerLat, spread) {
             const locations = [];
@@ -153,6 +211,36 @@
 
         // Add navigation controls
         map.addControl(new mapboxgl.NavigationControl());
+
+        // Add ALEPH HUB marker in the center
+        const hubEl = document.createElement('div');
+        hubEl.innerHTML = '🏛️';
+        hubEl.style.fontSize = '40px';
+        hubEl.style.cursor = 'pointer';
+        hubEl.style.zIndex = '1000';
+
+        // Create a popup but don't add it to map yet
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        })
+        .setHTML('<h3 style="margin: 0; padding: 5px; font-weight: 500;">Aleph Hub</h3>');
+
+        // Create the marker
+        const hubMarker = new mapboxgl.Marker(hubEl)
+            .setLngLat([-58.4320, -34.5830])
+            .addTo(map);
+
+        // Show popup on hover
+        hubEl.addEventListener('mouseenter', () => {
+            popup.setLngLat([-58.4320, -34.5830])
+                .addTo(map);
+        });
+
+        // Hide popup when mouse leaves
+        hubEl.addEventListener('mouseleave', () => {
+            popup.remove();
+        });
     </script>
 </body>
 </html> 
