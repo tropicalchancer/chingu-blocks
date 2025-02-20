@@ -14,6 +14,29 @@
             margin-top: 2rem;
             border-radius: 12px;
         }
+
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            gap: 8px;
+        }
+
+        .legend-icon {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -23,11 +46,46 @@
                 <span class="house-icon">🏠</span>
                 <h1>Aleph Neighborhood</h1>
             </div>
-            <p class="subtitle">A movement transforming Argentina into the world's first crypto nation</p>
+            <p class="subtitle">A movement transforming Argentina into the world's first crypto nation.</p>
         </header>
 
         <div class="main-layout">
-            <div id="map"></div>
+            <div id="map">
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <span class="legend-icon">🏛️</span>
+                        <span>Aleph Hub</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🏰</span>
+                        <span>Odisea House</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🏠</span>
+                        <span>Connected House</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">☕</span>
+                        <span>Cafe</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🍽️</span>
+                        <span>Restaurant</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🛍️</span>
+                        <span>Shop</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🍷</span>
+                        <span>Bar</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-icon">🍳</span>
+                        <span>Local Eatery</span>
+                    </div>
+                </div>
+            </div>
             <div class="dashboard-grid">
                 <!-- People Section -->
                 <div class="card">
@@ -186,9 +244,13 @@
         const houses = generateLocations(36, -58.4320, -34.5830, 0.025);
 
         // Add merchant markers
+        const merchantEmojis = ['🛍️', '☕', '🍽️', '🍳', '🍷'];  // Shopping, cafe, restaurant, diner, wine/bar
+
         merchants.forEach(location => {
             const el = document.createElement('div');
-            el.innerHTML = '🏬';
+            // Randomly select an emoji from the array
+            const randomEmoji = merchantEmojis[Math.floor(Math.random() * merchantEmojis.length)];
+            el.innerHTML = randomEmoji;
             el.style.fontSize = '18px';
             el.style.cursor = 'pointer';
 
@@ -207,6 +269,45 @@
             new mapboxgl.Marker(el)
                 .setLngLat([location.lng, location.lat])
                 .addTo(map);
+        });
+
+        // Add Odisea house locations
+        const odiseaHouses = [
+            { lng: -58.4280, lat: -34.5790 }, // Northeast location
+            { lng: -58.4360, lat: -34.5850 }, // Southwest location
+            { lng: -58.4290, lat: -34.5870 }  // Southeast location
+        ];
+
+        // Add Odisea house markers
+        odiseaHouses.forEach(location => {
+            const el = document.createElement('div');
+            el.innerHTML = '🏰';
+            el.style.fontSize = '28px'; // Larger than merchants (18px) but smaller than hub (40px)
+            el.style.cursor = 'pointer';
+            el.style.zIndex = '500'; // Above regular markers but below hub
+
+            // Create popup for Odisea houses
+            const odiseaPopup = new mapboxgl.Popup({
+                closeButton: false,
+                closeOnClick: false
+            })
+            .setHTML('<h3 style="margin: 0; padding: 5px; font-weight: 500;">Odisea House</h3>');
+
+            // Create the marker
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat([location.lng, location.lat])
+                .addTo(map);
+
+            // Show popup on hover
+            el.addEventListener('mouseenter', () => {
+                odiseaPopup.setLngLat([location.lng, location.lat])
+                    .addTo(map);
+            });
+
+            // Hide popup when mouse leaves
+            el.addEventListener('mouseleave', () => {
+                odiseaPopup.remove();
+            });
         });
 
         // Add navigation controls
